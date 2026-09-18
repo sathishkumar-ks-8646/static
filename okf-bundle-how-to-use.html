@@ -53,10 +53,10 @@ nav.toc{display:flex;flex-wrap:wrap;gap:10px 18px;padding:14px 0;border-top:1px 
 <div class="step"><b>Add one instruction</b><span>"Read <code>how-to-use-this-bundle.md</code> first; it is the source of truth for API facts; quote the file for each fact." That single line was enough in every evaluated set-up.</span></div>
 <div class="step"><b>Give it hands (optional)</b><span>A tool that executes calls: our MCP server, an SDK, or one generic HTTP function that adds <code>Authorization</code> and <code>ZANALYTICS-ORGID</code>. The bundle supplies method, path and CONFIG.</span></div>
 </div>
-<pre><button class="copy">copy</button><code>https://raw.githubusercontent.com/sathish-dev-git/zoho-analytics-okf/main/llms.txt          ← curated entry point
-https://raw.githubusercontent.com/sathish-dev-git/zoho-analytics-okf/main/okf/how-to-use-this-bundle.md
-https://raw.githubusercontent.com/sathish-dev-git/zoho-analytics-okf/main/okf/references/endpoint-catalog.json   ← machine-readable inventory
-git clone https://github.com/sathish-dev-git/zoho-analytics-okf.git</code></pre>
+<pre><button class="copy">copy</button><code>https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-okf/main/llms.txt          ← curated entry point
+https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-okf/main/okf/how-to-use-this-bundle.md
+https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-okf/main/okf/references/endpoint-catalog.json   ← machine-readable inventory
+git clone https://github.com/sathishkumar-ks-8646/analytics-okf.git</code></pre>
 </div></section>
 
 <section id="recipes"><div class="wrap">
@@ -68,10 +68,10 @@ git clone https://github.com/sathish-dev-git/zoho-analytics-okf.git</code></pre>
 
 <div class="pane on" data-p="cc">
 <h3>Claude Code</h3><p>Clone the bundle into (or next to) your project and add these lines to <code>CLAUDE.md</code>. This is verbatim what the live evaluation used; it works with file tools alone.</p>
-<pre><button class="copy">copy</button><code>git clone https://github.com/sathish-dev-git/zoho-analytics-okf.git
+<pre><button class="copy">copy</button><code>git clone https://github.com/sathishkumar-ks-8646/analytics-okf.git
 
 # CLAUDE.md
-The Zoho Analytics REST API v2 OKF bundle is in ./zoho-analytics-okf/okf/ and is the source of
+The Zoho Analytics REST API v2 OKF bundle is in ./analytics-okf/okf/ and is the source of
 truth for API semantics: filter criteria grammar (okf/foundations/filter-criteria-syntax.md),
 import options (okf/domains/data-operations/sync-data-import/), row APIs, sharing
 (okf/domains/share-and-publish/sharing/), workflows (okf/workflows/) and error codes
@@ -87,7 +87,7 @@ Links beginning with / are relative to okf/. Quote the bundle file for each fact
 description: Zoho Analytics REST API v2 facts come from the OKF bundle
 alwaysApply: true
 ---
-For any Zoho Analytics API question or code, use ./zoho-analytics-okf/okf/ as the only source of API facts.
+For any Zoho Analytics API question or code, use ./analytics-okf/okf/ as the only source of API facts.
 Read okf/how-to-use-this-bundle.md first. Take method, path, CONFIG location and scope from the endpoint
 document's frontmatter; encoding rules from okf/foundations/request-conventions.md; multi-step tasks from
 okf/workflows/; error codes from okf/foundations/error-codes.md#error-&lt;code&gt;. Cite the file for each fact.</code></pre>
@@ -97,7 +97,7 @@ okf/workflows/; error codes from okf/foundations/error-codes.md#error-&lt;code&g
 <div class="pane" data-p="chat">
 <h3>ChatGPT, Gemini, Claude.ai and other chat assistants</h3><p>Two options, depending on whether the assistant can browse.</p>
 <table><tr><th style="width:170px">Browsing on</th><td>Paste this at the top of the chat:<pre><button class="copy">copy</button><code>Use only the Zoho Analytics OKF bundle as the source of API facts. Fetch
-https://raw.githubusercontent.com/sathish-dev-git/zoho-analytics-okf/main/llms.txt
+https://raw.githubusercontent.com/sathishkumar-ks-8646/analytics-okf/main/llms.txt
 then fetch the documents it links to that are relevant to my question (start with overview.md and
 how-to-use-this-bundle.md; links starting with "/" are relative to .../main/okf/). Quote the file for each fact.</code></pre></td></tr>
 <tr><th>No browsing</th><td>Paste the relevant documents yourself: the endpoint document (e.g. <code>okf/domains/share-and-publish/sharing/share-views.md</code>), the workflow if it is a multi-step task, and the error entry if you are debugging. Typical size 5–20 KB — comfortably inside any chat window. The evaluation's <code>manual-web-ai-test/</code> folder has ready-made pastes for ten common tasks.</td></tr></table>
@@ -107,7 +107,7 @@ how-to-use-this-bundle.md; links starting with "/" are relative to .../main/okf/
 <h3>Any LLM through an API — OpenRouter, Ollama, vLLM, Bedrock, Vertex…</h3><p>No agent framework needed. Put the documents an agent would open into the prompt and ask the question. This is exactly how the open models were evaluated (Nemotron-3 120B: 51% → 98%; Ling-3.0 Flash: 19% → 100%).</p>
 <pre><button class="copy">copy</button><code># python — works with any OpenAI-compatible endpoint (OpenRouter, Ollama, vLLM, LM Studio …)
 import json, os, urllib.request
-OKF = "zoho-analytics-okf/okf"                       # git clone https://github.com/sathish-dev-git/zoho-analytics-okf
+OKF = "analytics-okf/okf"                       # git clone https://github.com/sathishkumar-ks-8646/analytics-okf
 def doc(p): return open(f"{OKF}/{p.lstrip('/')}", encoding="utf-8").read()
 def error_entry(code):
     s = doc("/foundations/error-codes.md"); i = s.find(f"## Error {code}\n"); return s[i:s.find("\n## Error ", i+5)]
@@ -128,7 +128,7 @@ req = urllib.request.Request("https://openrouter.ai/api/v1/chat/completions", js
       {"Authorization": "Bearer " + os.environ["OPENROUTER_API_KEY"], "Content-Type": "application/json"})
 print(json.load(urllib.request.urlopen(req))["choices"][0]["message"]["content"])</code></pre>
 <pre><button class="copy">copy</button><code># Ollama, one-liner: a local model with the endpoint document in context
-ollama run llama3.1 "$(cat zoho-analytics-okf/okf/domains/share-and-publish/sharing/share-views.md)
+ollama run llama3.1 "$(cat analytics-okf/okf/domains/share-and-publish/sharing/share-views.md)
 
 Using only the document above: give the HTTP method, path, headers, CONFIG and scope to share view 123 read-only to jane@example.com."</code></pre>
 <p>Which files to include? Follow the bundle's own navigation rules (below): endpoint document for facts, workflow for multi-step jobs, <code>request-conventions.md</code> for encoding, the error-catalog entry for a failure. Or let the model choose: give it <code>how-to-use-this-bundle.md</code> plus the file list and ask for the 3–4 paths it needs, then send those — the "self-navigated" condition in the evaluation scored 8/8 both times on a 120B open model.</p>
@@ -154,7 +154,7 @@ Using only the document above: give the HTTP method, path, headers, CONFIG and s
 <h3>Package it as an Agent Skill</h3><p>The <a href="https://agentskills.io/specification">Agent Skills</a> layout (used by Claude Code, Cursor and others) is a folder with a <code>SKILL.md</code>. The bundle is the <code>references/</code> content; the skill tells the agent when and how to read it.</p>
 <pre><button class="copy">copy</button><code>~/.claude/skills/zoho-analytics-api/          (or ~/.cursor/skills/…)
 ├── SKILL.md
-└── references/okf/   → symlink or copy of zoho-analytics-okf/okf
+└── references/okf/   → symlink or copy of analytics-okf/okf
 
 # SKILL.md
 ---
@@ -175,7 +175,7 @@ Source of truth: references/okf/. Read references/okf/how-to-use-this-bundle.md 
 import glob, yaml, re
 from langchain_core.documents import Document
 docs = []
-for path in glob.glob("zoho-analytics-okf/okf/**/*.md", recursive=True):
+for path in glob.glob("analytics-okf/okf/**/*.md", recursive=True):
     text = open(path, encoding="utf-8").read()
     m = re.match(r"^---\n(.*?)\n---\n(.*)$", text, re.S)
     meta = yaml.safe_load(m.group(1)) if m else {}
@@ -198,7 +198,7 @@ for path in glob.glob("zoho-analytics-okf/okf/**/*.md", recursive=True):
 <tr><td><code>okf/manifest.json</code></td><td>Bundle version, counts, entry points — pin a version, detect updates.</td></tr></table>
 <pre><button class="copy">copy</button><code># jq: list every endpoint that needs the share.create scope
 jq -r '.endpoints[] | select(.oauth_scopes[]? == "ZohoAnalytics.share.create") | "\(.method) \(.path)  \(.operation_id)"' \
-   zoho-analytics-okf/okf/references/endpoint-catalog.json</code></pre>
+   analytics-okf/okf/references/endpoint-catalog.json</code></pre>
 </div>
 </div></section>
 
@@ -309,7 +309,7 @@ api:
 </div>
 </div></section>
 
-<footer><div class="wrap">Zoho Analytics REST API v2 · Open Knowledge Format bundle 1.0.0 · Repository (temporary home): <a href="https://github.com/sathish-dev-git/zoho-analytics-okf">github.com/sathish-dev-git/zoho-analytics-okf</a> · Evaluation: <a href="okf-bundle-evaluation.html">full report</a> · <a href="okf-bundle-evaluation-simplified.html">plain-language summary</a></div></footer>
+<footer><div class="wrap">Zoho Analytics REST API v2 · Open Knowledge Format bundle 1.0.0 · Repository (temporary home): <a href="https://github.com/sathishkumar-ks-8646/analytics-okf">github.com/sathishkumar-ks-8646/analytics-okf</a> · Evaluation: <a href="okf-bundle-evaluation.html">full report</a> · <a href="okf-bundle-evaluation-simplified.html">plain-language summary</a></div></footer>
 
 <script>
 document.querySelectorAll('.tab').forEach(t=>t.addEventListener('click',()=>{document.querySelectorAll('.tab').forEach(x=>x.classList.remove('on'));document.querySelectorAll('.pane').forEach(x=>x.classList.remove('on'));t.classList.add('on');document.querySelector('.pane[data-p="'+t.dataset.t+'"]').classList.add('on');}));
